@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Walk {
+  id        String     @id @default(cuid())
+  distance  Float      // in kilometers
+  duration  Int?       // in minutes (optional)
+  notes     String?
+  refused   Boolean    @default(false) // true if "Ink Said No"
+  weather   String?    // JSON string of weather data at time of walk
+  temperature Float?   // in celsius
+  condition String?    // "sunny", "rainy", "cloudy", etc.
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([createdAt])
+}
+
+model Streak {
+  id        String     @id @default(cuid())
+  label     String     // "last_refusal", "longest_walk", etc.
+  value     Int        // days, kilometers, etc.
+  updatedAt DateTime   @updatedAt
+}
